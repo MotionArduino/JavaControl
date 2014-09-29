@@ -15,7 +15,9 @@ import javax.comm.SerialPort;
 import javax.comm.UnsupportedCommOperationException;
 
 public class RS232 {
-    private String PortName;  
+    private static final String TAG = RS232.class.getSimpleName();
+    
+	private String PortName;  
     private CommPortIdentifier portId;  
     private SerialPort serialPort;  
     private OutputStream out;
@@ -28,7 +30,7 @@ public class RS232 {
     static {
         try {
             System.loadLibrary("win32com");
-            System.out.println("loadLibrary()...win32com.dll");
+            KLog.d(TAG, "loadLibrary()...win32com.dll");
             String driverName = "com.sun.comm.Win32Driver";
             CommDriver driver = (CommDriver) Class.forName(driverName).newInstance();
             driver.initialize();
@@ -45,14 +47,14 @@ public class RS232 {
         int openSignal = 1;
         
         PortName = "COM" + PortID;
-        System.out.println("Open port : " + PortName);
+        KLog.d(TAG, "Open port : " + PortName);
         try {
             portId = CommPortIdentifier.getPortIdentifier(PortName);
             try {
                 serialPort = (SerialPort) portId.open("Serial_Communication", 2000);
-                System.out.println("Open Serial success!");
+                KLog.d(TAG, "Open Serial success!");
             } catch (PortInUseException e) {
-                System.out.println("error : " + e);
+            	KLog.e(TAG, "error : " + e);
                 e.printStackTrace();
                 
                 if (!portId.getCurrentOwner().equals("Serial_Communication")) {
@@ -70,7 +72,7 @@ public class RS232 {
             try {
                 in = serialPort.getInputStream();
                 out = serialPort.getOutputStream();
-                System.out.println("Open stream success!");
+                KLog.d(TAG, "Open stream success!");
             } catch (IOException e) {
                 openSignal = 3;
                 e.printStackTrace();
@@ -83,7 +85,7 @@ public class RS232 {
                                                SerialPort.DATABITS_8,
                                                SerialPort.STOPBITS_1, 
                                                SerialPort.PARITY_NONE);
-                System.out.println("Set params success!");
+                KLog.d(TAG, "Set params success!");
             } catch (UnsupportedCommOperationException e) {
                 openSignal = 4;
                 e.printStackTrace();
@@ -110,7 +112,7 @@ public class RS232 {
      * @param Msg
      */
     public void write(String Msg) {
-        System.out.println("WritePort : " + Msg);
+    	KLog.d(TAG, "WritePort : " + Msg);
         try {
             if (out != null) {
                 for (int i = 0; i < Msg.length(); i++) {
@@ -183,13 +185,13 @@ public class RS232 {
         test.close();
         
         // Keep this process running until Enter is pressed
-        System.out.println("Press Enter to quit...");
+        KLog.d(TAG, "Press Enter to quit...");
         try {
             System.in.read();
         } catch (IOException e) {
             e.printStackTrace();
         }
         
-        System.out.println("Exit");
+        KLog.d(TAG, "Exit");
     }
 }

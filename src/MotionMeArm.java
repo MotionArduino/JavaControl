@@ -16,6 +16,9 @@ import com.leapmotion.leap.*;
  * 3. Send the commands to MeArm via RS232
  */
 public class MotionMeArm {
+    private static final String TAG = MotionMeArm.class.getSimpleName();
+    
+    private static final int MOVE_INTERVAL = 20;
     
     private int cnt = 0;
     private RS232 mRS232 = null;
@@ -54,11 +57,9 @@ public class MotionMeArm {
      */
     public void sendToRS232(int grab, int base, int vertical, int frontAndBack) {
         cnt++;
-        if(cnt > 50) {        //Control the send freq
+        if(cnt > MOVE_INTERVAL) {        //Control the send freq
             String Msg = String.format("%d,%d,%d,%d", grab, base, vertical, frontAndBack);
-            //String Msg = String.format("%d,%d,%d,%d", 0, base, 0, 0);
             mRS232.write(Msg);
-            //mRS232.read();
             cnt = 0;
         }
     }
@@ -71,6 +72,8 @@ public class MotionMeArm {
      */
     public void moveArm(Vector mov, Vector pos, int grab) {
         int threshold = 0;
+        
+        KLog.d(TAG, "mov : %s, pos : %s", mov, pos);
         
         //Transfer via Leap Motion coordinate to robot arm cmd
         //Robot move angle
@@ -133,27 +136,26 @@ public class MotionMeArm {
      * Leap motion listener
      */
     private static class ArmListener extends Listener {
-        private MotionMeArm mLeapArm;
+		private MotionMeArm mLeapArm;
         
         public ArmListener(MotionMeArm arm) {
             mLeapArm = arm;
         }
         
         public void onInit(Controller controller) {
-            System.out.println("Initialized");
+            KLog.d(TAG, "Initialized");
         }
 
         public void onConnect(Controller controller) {
-            System.out.println("Connected");
+        	KLog.d(TAG, "Connected");
         }
 
         public void onDisconnect(Controller controller) {
-            //Note: not dispatched when running in a debugger.
-            System.out.println("Disconnected");
+        	KLog.d(TAG, "Disconnected");
         }
 
         public void onExit(Controller controller) {
-            System.out.println("Exited");
+        	KLog.d(TAG, "Exited");
         }
 
         public void onFrame(Controller controller) {
@@ -162,9 +164,8 @@ public class MotionMeArm {
 
             //Get hands
             for(Hand hand : frame.hands()) {
-                //System.out.println("v : " + hand.palmVelocity() + ", pos : " + hand.palmPosition() + ", grab : " + hand.grabStrength());
                 int grab = 0;
-                grab = ((int)(hand.grabStrength() * 100.0) / 2) + 5;        //0 ~ 1.0ת��Ϊ 5 ~ 55
+                grab = ((int)(hand.grabStrength() * 100.0) / 2) + 5;        //0 ~ 1.0 transfer to: 5 ~ 55
                 
                 mLeapArm.moveArm(hand.palmVelocity(), hand.palmPosition(), grab);
                 
@@ -179,14 +180,14 @@ public class MotionMeArm {
      * @param args
      */
     public static void main(String[] args) {
-        System.out.println("Please input COM port :");
+    	KLog.d(TAG, "Please input COM port :");
         Scanner sc = new Scanner(System.in);
         int RS232_Port = sc.nextInt();
         
         MotionMeArm leap = new MotionMeArm();
         leap.init(RS232_Port);
         
-        System.out.println("Press Enter to quit...");
+        KLog.d(TAG, "Press Enter to quit...");
         try {
             System.in.read();
         } catch (IOException e) {

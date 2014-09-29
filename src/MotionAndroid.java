@@ -229,5 +229,6 @@ class MotionAndroid {
         }
         
         leap.destory();
+        sc.close();
     }
 }
