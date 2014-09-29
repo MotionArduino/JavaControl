@@ -9,7 +9,7 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="libs/LeapJava.jar">
 		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="LearnLeap/libs"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="JavaControl/libs"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
