@@ -18,7 +18,7 @@ import com.leapmotion.leap.*;
 public class MotionMeArm {
     private static final String TAG = MotionMeArm.class.getSimpleName();
     
-    private static final int MOVE_INTERVAL = 4;
+    private static final int MOVE_INTERVAL = 5;
     
     private int cnt = 0;
     private RS232 mRS232 = null;
