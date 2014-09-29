@@ -23,6 +23,8 @@ public class RS232 {
     private OutputStream out;
     private InputStream in;
     
+    private static final int BAULD_RATE = 57600;
+    
     /**
      * Load libs
      * @return
@@ -81,7 +83,7 @@ public class RS232 {
 
             // Initialize the communication parameters to 9600, 8, 1, none.
             try {
-                serialPort.setSerialPortParams(9600, 
+                serialPort.setSerialPortParams(BAULD_RATE, 
                                                SerialPort.DATABITS_8,
                                                SerialPort.STOPBITS_1, 
                                                SerialPort.PARITY_NONE);
@@ -159,7 +161,7 @@ public class RS232 {
      * @param args
      */
     public static void main(String[] args) {
-        int PORT = 32;
+        int PORT = 34;
         RS232 test = new RS232();
         test.open(PORT);
         

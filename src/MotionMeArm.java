@@ -18,7 +18,7 @@ import com.leapmotion.leap.*;
 public class MotionMeArm {
     private static final String TAG = MotionMeArm.class.getSimpleName();
     
-    private static final int MOVE_INTERVAL = 20;
+    private static final int MOVE_INTERVAL = 4;
     
     private int cnt = 0;
     private RS232 mRS232 = null;
@@ -73,7 +73,7 @@ public class MotionMeArm {
     public void moveArm(Vector mov, Vector pos, int grab) {
         int threshold = 0;
         
-        KLog.d(TAG, "mov : %s, pos : %s", mov, pos);
+        //KLog.d(TAG, "mov : %s, pos : %s", mov, pos);
         
         //Transfer via Leap Motion coordinate to robot arm cmd
         //Robot move angle
